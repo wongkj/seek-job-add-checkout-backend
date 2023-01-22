@@ -17,8 +17,8 @@ const checkDiscountObject = discount => {
   console.log(`I was hit 2`)
   const { discountType } = discount;
   let result = true
-  const reducedChargeKeys = ['discountType', 'adType', 'qtyBought', 'qtyCharged']
-  const reducedPriceKeys = ['discountType', 'adType', 'newPrice']
+  const reducedChargeKeys = ['companyName', 'discountType', 'adType', 'qtyBought', 'qtyCharged']
+  const reducedPriceKeys = ['companyName', 'discountType', 'adType', 'newPrice']
   switch (discountType) {
     case 'Reduced Charge':
       Object.entries(discount).forEach(([key, value], index) => {

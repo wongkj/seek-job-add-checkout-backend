@@ -23,17 +23,20 @@ describe('checkAdObject', () => {
 
 describe('checkDiscountObject', () => {
   const reducedChargeDiscount = {
+    companyName: 'NAB',
     discountType: 'Reduced Charge',
     adType: "Classic Ad",
     qtyBought: 3,
     qtyCharged: 2
   }
   const reducedPriceDiscount = {
+    companyName: 'NAB',
     discountType: 'Reduced Price',
     adType: "Classic Ad",
     newPrice: 300.00
   }
   const incorrectDiscountObject = {
+    companyName: 'NAB',
     discountType: 'Reduced Charge',
     adType: "Classic Ad",
     errorPrice: 300.00
@@ -52,6 +55,7 @@ describe('checkDiscountObject', () => {
   })
   test('incorrect discountType data type returns a false', () => {
     const errorReducedChargeDiscount = {
+      companyName: 'NAB',
       discountType: 1,
       adType: "Classic Ad",
       qtyBought: 3,
@@ -62,6 +66,7 @@ describe('checkDiscountObject', () => {
   })
   test('incorrect qtyBought data type returns a false', () => {
     const errorReducedChargeDiscount = {
+      companyName: 'NAB',
       discountType: "Reduced Charge",
       adType: "Classic Ad",
       qtyBought: '3',
