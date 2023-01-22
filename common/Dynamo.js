@@ -1,4 +1,5 @@
 const AWS = require('aws-sdk')
+const { v4: uuid4 } = require('uuid');
 
 class DynamoDB {
 
@@ -36,12 +37,17 @@ class DynamoDB {
     return data.Item;
   }
 
-  async insertItem(data, TableName) {
-    if (!data.id) throw new Error('No id provided in the data')
+  async insertItem(data) {
+    const id = uuid4()
+
+    const newItem = {
+      id,
+      ...data
+    }
 
     const params = {
-      TableName,
-      Item: data
+      TableName: this.#tableName,
+      Item: newItem
     }
 
     const res = await this.#documentClient.put(params).promise();

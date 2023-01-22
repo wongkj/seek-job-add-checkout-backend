@@ -7,6 +7,7 @@ jest.mock('../common/Dynamo')
 
 
 describe('createAd', () => {
+  const tableName = 'adTable'
   const event = {
     resource: '/',
     path: '/ad',
@@ -29,7 +30,10 @@ describe('createAd', () => {
         statusType: 'OK',
         body: JSON.stringify({ message: 'Successfully inserted new Ad into the Ad Table.' })        
       }      
-      mockCheckAdObject.mockReturnValue(false)
+      mockCheckAdObject.mockReturnValue(true)
+      const dynamodb = new DynamoDB(tableName)
+      dynamodb.insertItem = jest.fn()
+      dynamodb.insertItem.mockReturnValue(() => 1)
       const response = await createAd(event)
       expect(response).toMatchObject(expectedResponse)
     })
@@ -42,7 +46,7 @@ describe('createAd', () => {
       const expectedResponse = {
         statusCode: 400,
         statusType: 'Bad Request',
-        body: JSON.stringify({ message: 'Ad properties were incorrect. Cannot add user to database.' })        
+        body: JSON.stringify({ message: 'Ad properties were incorrect. Cannot create new ad.' })        
       }      
       mockCheckAdObject.mockReturnValue(false)
       const response = await createAd(event)
@@ -64,16 +68,19 @@ describe('createAd', () => {
 
     })
     test('put action in the Dynamo adTable causing an error then 500 Internal Server Error is returned', async () => {
+      expect(DynamoDB).not.toHaveBeenCalled()
+      const dynamodb = new DynamoDB(tableName)
       mockCheckAdObject.mockReturnValue(true)
-      DynamoDB.insertItem = jest.fn()
-      DynamoDB.insertItem.mockImplementation(() => {
+      dynamodb.insertItem = jest.fn()
+      dynamodb.insertItem.mockImplementation(() => {
         throw new Error()
       })
       const expectedResponse = {
         statusCode: 500,
         statusType: 'Internal Server Error',
         body: JSON.stringify({ message: 'Error inserting item into Dynamo Table' })        
-      }         
+      }
+      expect(DynamoDB).toHaveBeenCalledTimes(1)
       const response = await createAd(event)
       expect(response).toMatchObject(expectedResponse)
 

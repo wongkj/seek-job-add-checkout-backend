@@ -10,9 +10,8 @@ provider:
   iamRoleStatements:
     - Effect: Allow
       Action:
-        - dynamo:PutItem
-      Resource:
-        Fn::GetAtt: [DiscountTable, Arn]
+        - dynamodb:*
+      Resource: '*'
 
 
 functions:
@@ -24,7 +23,7 @@ functions:
           method: POST
           cors: true
     environment:
-      AD_TABLE: { Ref: DiscountTable }
+      AD_TABLE: { Ref: AdTable }
 
 
 resources:
@@ -39,9 +38,9 @@ resources:
         KeySchema:
           - AttributeName: id
             KeyType: HASH
-        ProvisionedThroughput:
-          ReadCapacityUnits: 1
-          WriteCapacityUnits: 1
+        # ProvisionedThroughput:
+        #   ReadCapacityUnits: 1
+        #   WriteCapacityUnits: 1
         BillingMode: PAY_PER_REQUEST
     AdTable:
       Type: AWS::DynamoDB::Table
@@ -53,7 +52,7 @@ resources:
         KeySchema:
           - AttributeName: id
             KeyType: HASH
-        ProvisionedThroughput:
-          ReadCapacityUnits: 1
-          WriteCapacityUnits: 1
+        # ProvisionedThroughput:
+        #   ReadCapacityUnits: 1
+        #   WriteCapacityUnits: 1
         BillingMode: PAY_PER_REQUEST    

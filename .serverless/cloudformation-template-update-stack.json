@@ -71,10 +71,10 @@
         }
       }
     },
-    "HelloLogGroup": {
+    "CreateAdLogGroup": {
       "Type": "AWS::Logs::LogGroup",
       "Properties": {
-        "LogGroupName": "/aws/lambda/seek-job-add-checkout-backend-dev-hello"
+        "LogGroupName": "/aws/lambda/seek-job-add-checkout-backend-dev-createAd"
       }
     },
     "IamRoleLambdaExecution": {
@@ -133,6 +133,13 @@
                       "Fn::Sub": "arn:${AWS::Partition}:logs:${AWS::Region}:${AWS::AccountId}:log-group:/aws/lambda/seek-job-add-checkout-backend-dev*:*:*"
                     }
                   ]
+                },
+                {
+                  "Effect": "Allow",
+                  "Action": [
+                    "dynamodb:*"
+                  ],
+                  "Resource": "*"
                 }
               ]
             }
@@ -154,20 +161,27 @@
         }
       }
     },
-    "HelloLambdaFunction": {
+    "CreateAdLambdaFunction": {
       "Type": "AWS::Lambda::Function",
       "Properties": {
         "Code": {
           "S3Bucket": {
             "Ref": "ServerlessDeploymentBucket"
           },
-          "S3Key": "serverless/seek-job-add-checkout-backend/dev/1674349610738-2023-01-22T01:06:50.738Z/seek-job-add-checkout-backend.zip"
+          "S3Key": "serverless/seek-job-add-checkout-backend/dev/1674381185914-2023-01-22T09:53:05.914Z/seek-job-add-checkout-backend.zip"
         },
-        "Handler": "handler.hello",
+        "Handler": "lambdas/ad.createAd",
         "Runtime": "nodejs14.x",
-        "FunctionName": "seek-job-add-checkout-backend-dev-hello",
+        "FunctionName": "seek-job-add-checkout-backend-dev-createAd",
         "MemorySize": 1024,
         "Timeout": 6,
+        "Environment": {
+          "Variables": {
+            "AD_TABLE": {
+              "Ref": "AdTable"
+            }
+          }
+        },
         "Role": {
           "Fn::GetAtt": [
             "IamRoleLambdaExecution",
@@ -176,61 +190,223 @@
         }
       },
       "DependsOn": [
-        "HelloLogGroup"
+        "CreateAdLogGroup"
       ]
     },
-    "HelloLambdaVersionjUG6vjDYXS0wrJZasN8hbHENWOcSs8nWfSM7E3UDY": {
+    "CreateAdLambdaVersionS93oCLmLSn85tvPHi097h8RFKPR11wEAFrd7cKhHs": {
       "Type": "AWS::Lambda::Version",
       "DeletionPolicy": "Retain",
       "Properties": {
         "FunctionName": {
-          "Ref": "HelloLambdaFunction"
+          "Ref": "CreateAdLambdaFunction"
         },
-        "CodeSha256": "54QENTqTHnawH8DFN8VsRnGFC+GvUv4sW7b9wk3UhTA="
+        "CodeSha256": "/GF8uvIgcvTOcUYVAoAlV6SmsmsLilMovYu3ari1KSQ="
       }
     },
-    "discountTable": {
+    "ApiGatewayRestApi": {
+      "Type": "AWS::ApiGateway::RestApi",
+      "Properties": {
+        "Name": "dev-seek-job-add-checkout-backend",
+        "EndpointConfiguration": {
+          "Types": [
+            "EDGE"
+          ]
+        },
+        "Policy": ""
+      }
+    },
+    "ApiGatewayResourceAd": {
+      "Type": "AWS::ApiGateway::Resource",
+      "Properties": {
+        "ParentId": {
+          "Fn::GetAtt": [
+            "ApiGatewayRestApi",
+            "RootResourceId"
+          ]
+        },
+        "PathPart": "ad",
+        "RestApiId": {
+          "Ref": "ApiGatewayRestApi"
+        }
+      }
+    },
+    "ApiGatewayMethodAdOptions": {
+      "Type": "AWS::ApiGateway::Method",
+      "Properties": {
+        "AuthorizationType": "NONE",
+        "HttpMethod": "OPTIONS",
+        "MethodResponses": [
+          {
+            "StatusCode": "200",
+            "ResponseParameters": {
+              "method.response.header.Access-Control-Allow-Origin": true,
+              "method.response.header.Access-Control-Allow-Headers": true,
+              "method.response.header.Access-Control-Allow-Methods": true
+            },
+            "ResponseModels": {}
+          }
+        ],
+        "RequestParameters": {},
+        "Integration": {
+          "Type": "MOCK",
+          "RequestTemplates": {
+            "application/json": "{statusCode:200}"
+          },
+          "ContentHandling": "CONVERT_TO_TEXT",
+          "IntegrationResponses": [
+            {
+              "StatusCode": "200",
+              "ResponseParameters": {
+                "method.response.header.Access-Control-Allow-Origin": "'*'",
+                "method.response.header.Access-Control-Allow-Headers": "'Content-Type,X-Amz-Date,Authorization,X-Api-Key,X-Amz-Security-Token,X-Amz-User-Agent'",
+                "method.response.header.Access-Control-Allow-Methods": "'OPTIONS,POST'"
+              },
+              "ResponseTemplates": {
+                "application/json": ""
+              }
+            }
+          ]
+        },
+        "ResourceId": {
+          "Ref": "ApiGatewayResourceAd"
+        },
+        "RestApiId": {
+          "Ref": "ApiGatewayRestApi"
+        }
+      }
+    },
+    "ApiGatewayMethodAdPost": {
+      "Type": "AWS::ApiGateway::Method",
+      "Properties": {
+        "HttpMethod": "POST",
+        "RequestParameters": {},
+        "ResourceId": {
+          "Ref": "ApiGatewayResourceAd"
+        },
+        "RestApiId": {
+          "Ref": "ApiGatewayRestApi"
+        },
+        "ApiKeyRequired": false,
+        "AuthorizationType": "NONE",
+        "Integration": {
+          "IntegrationHttpMethod": "POST",
+          "Type": "AWS_PROXY",
+          "Uri": {
+            "Fn::Join": [
+              "",
+              [
+                "arn:",
+                {
+                  "Ref": "AWS::Partition"
+                },
+                ":apigateway:",
+                {
+                  "Ref": "AWS::Region"
+                },
+                ":lambda:path/2015-03-31/functions/",
+                {
+                  "Fn::GetAtt": [
+                    "CreateAdLambdaFunction",
+                    "Arn"
+                  ]
+                },
+                "/invocations"
+              ]
+            ]
+          }
+        },
+        "MethodResponses": []
+      },
+      "DependsOn": [
+        "CreateAdLambdaPermissionApiGateway"
+      ]
+    },
+    "ApiGatewayDeployment1674381179993": {
+      "Type": "AWS::ApiGateway::Deployment",
+      "Properties": {
+        "RestApiId": {
+          "Ref": "ApiGatewayRestApi"
+        },
+        "StageName": "dev"
+      },
+      "DependsOn": [
+        "ApiGatewayMethodAdOptions",
+        "ApiGatewayMethodAdPost"
+      ]
+    },
+    "CreateAdLambdaPermissionApiGateway": {
+      "Type": "AWS::Lambda::Permission",
+      "Properties": {
+        "FunctionName": {
+          "Fn::GetAtt": [
+            "CreateAdLambdaFunction",
+            "Arn"
+          ]
+        },
+        "Action": "lambda:InvokeFunction",
+        "Principal": "apigateway.amazonaws.com",
+        "SourceArn": {
+          "Fn::Join": [
+            "",
+            [
+              "arn:",
+              {
+                "Ref": "AWS::Partition"
+              },
+              ":execute-api:",
+              {
+                "Ref": "AWS::Region"
+              },
+              ":",
+              {
+                "Ref": "AWS::AccountId"
+              },
+              ":",
+              {
+                "Ref": "ApiGatewayRestApi"
+              },
+              "/*/*"
+            ]
+          ]
+        }
+      }
+    },
+    "DiscountTable": {
       "Type": "AWS::DynamoDB::Table",
       "Properties": {
         "TableName": "discountTable",
         "AttributeDefinitions": [
           {
-            "AttributeName": "discountId",
+            "AttributeName": "id",
             "AttributeType": "S"
           }
         ],
         "KeySchema": [
           {
-            "AttributeName": "discountId",
+            "AttributeName": "id",
             "KeyType": "HASH"
           }
         ],
-        "ProvisionedThroughput": {
-          "ReadCapacityUnits": 1,
-          "WriteCapacityUnits": 1
-        }
+        "BillingMode": "PAY_PER_REQUEST"
       }
     },
-    "adTable": {
+    "AdTable": {
       "Type": "AWS::DynamoDB::Table",
       "Properties": {
         "TableName": "adTable",
         "AttributeDefinitions": [
           {
-            "AttributeName": "adId",
+            "AttributeName": "id",
             "AttributeType": "S"
           }
         ],
         "KeySchema": [
           {
-            "AttributeName": "adId",
+            "AttributeName": "id",
             "KeyType": "HASH"
           }
         ],
-        "ProvisionedThroughput": {
-          "ReadCapacityUnits": 1,
-          "WriteCapacityUnits": 1
-        }
+        "BillingMode": "PAY_PER_REQUEST"
       }
     }
   },
@@ -243,13 +419,39 @@
         "Name": "sls-seek-job-add-checkout-backend-dev-ServerlessDeploymentBucketName"
       }
     },
-    "HelloLambdaFunctionQualifiedArn": {
+    "CreateAdLambdaFunctionQualifiedArn": {
       "Description": "Current Lambda function version",
       "Value": {
-        "Ref": "HelloLambdaVersionjUG6vjDYXS0wrJZasN8hbHENWOcSs8nWfSM7E3UDY"
+        "Ref": "CreateAdLambdaVersionS93oCLmLSn85tvPHi097h8RFKPR11wEAFrd7cKhHs"
       },
       "Export": {
-        "Name": "sls-seek-job-add-checkout-backend-dev-HelloLambdaFunctionQualifiedArn"
+        "Name": "sls-seek-job-add-checkout-backend-dev-CreateAdLambdaFunctionQualifiedArn"
+      }
+    },
+    "ServiceEndpoint": {
+      "Description": "URL of the service endpoint",
+      "Value": {
+        "Fn::Join": [
+          "",
+          [
+            "https://",
+            {
+              "Ref": "ApiGatewayRestApi"
+            },
+            ".execute-api.",
+            {
+              "Ref": "AWS::Region"
+            },
+            ".",
+            {
+              "Ref": "AWS::URLSuffix"
+            },
+            "/dev"
+          ]
+        ]
+      },
+      "Export": {
+        "Name": "sls-seek-job-add-checkout-backend-dev-ServiceEndpoint"
       }
     }
   }
