@@ -1,6 +1,6 @@
 const AWS = require('aws-sdk')
 
-export default class DynamoDB {
+class DynamoDB {
 
   #documentClient
   #tableName
@@ -37,7 +37,7 @@ export default class DynamoDB {
   }
 
   async insertItem(data, TableName) {
-    if (!data.id) throw new Error('no id provided in the data')
+    if (!data.id) throw new Error('No id provided in the data')
 
     const params = {
       TableName,
@@ -51,3 +51,5 @@ export default class DynamoDB {
   }
 
 }
+
+module.exports = DynamoDB

@@ -7,6 +7,13 @@ provider:
   runtime: nodejs14.x
   profile: serverless-admin
   lambdaHashingVersion: 20201221
+  iamRoleStatements:
+    - Effect: Allow
+      Action:
+        - dynamo:PutItem
+      Resource:
+        Fn::GetAtt: [DiscountTable, Arn]
+
 
 functions:
   createAd:
@@ -16,11 +23,13 @@ functions:
           path: ad
           method: POST
           cors: true
+    environment:
+      AD_TABLE: { Ref: DiscountTable }
 
 
 resources:
   Resources:
-    discountTable:
+    DiscountTable:
       Type: AWS::DynamoDB::Table
       Properties:
         TableName: discountTable
@@ -34,7 +43,7 @@ resources:
           ReadCapacityUnits: 1
           WriteCapacityUnits: 1
         BillingMode: PAY_PER_REQUEST
-    adTable:
+    AdTable:
       Type: AWS::DynamoDB::Table
       Properties:
         TableName: adTable

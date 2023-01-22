@@ -66,9 +66,9 @@ describe('createAd', () => {
       const expectedResponse = {
         statusCode: 500,
         statusType: 'Internal Server Error',
-        body: JSON.stringify({ message: 'Error sending message to SQS queue' })        
+        body: JSON.stringify({ message: 'Error inserting item into Dynamo Table' })        
       }         
-      const response = createAd(event)
+      const response = await createAd(event)
       expect(response).toMatchObject(expectedResponse)
 
     })
