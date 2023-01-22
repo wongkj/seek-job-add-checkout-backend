@@ -34,6 +34,25 @@ functions:
     environment:
       AD_TABLE: { Ref: AdTable }
 
+  createDiscount:
+    handler: lambdas/discount.createDiscount
+    events:
+      - http:
+          path: discount
+          method: POST
+          cors: true
+    environment:
+      DISCOUNT_TABLE: { Ref: DiscountTable }
+  getDiscount:
+    handler: lambdas/discount.getDiscount
+    events:
+      - http:
+          path: discount/{id}
+          method: GET
+          cors: true
+    environment:
+      DISCOUNT_TABLE: { Ref: DiscountTable }      
+
 
 resources:
   Resources:
