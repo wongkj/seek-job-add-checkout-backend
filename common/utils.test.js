@@ -1,6 +1,6 @@
 const { checkAdObject } = require('./utils')
 
-describe('checkUserObject', () => {
+describe('checkAdObject', () => {
   const ad = {
     name: 'New Ad Type',
     price: 400.00,
