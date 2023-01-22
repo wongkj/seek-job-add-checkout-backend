@@ -24,6 +24,15 @@ functions:
           cors: true
     environment:
       AD_TABLE: { Ref: AdTable }
+  getAd:
+    handler: lambdas/ad.getAd
+    events:
+      - http:
+          path: ad/{id}
+          method: GET
+          cors: true
+    environment:
+      AD_TABLE: { Ref: AdTable }
 
 
 resources:

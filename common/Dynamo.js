@@ -20,18 +20,18 @@ class DynamoDB {
     this.#tableName = value;
   }
 
-  async getItem(ID) {
+  async getItem(id) {
     const params = {
       TableName: this.#tableName,
       Key: {
-        ID
+        ID: id
       }
     }
     const data = await this.#documentClient
       .get(params)
       .promise()
 
-    if (!data || !data.Item) throw new Error(`There was an error fetching the data for ID of ${ID} from ${TableName}`);
+    if (!data || !data.Item) throw new Error(`There was an error fetching the data for ID of ${id} from ${TableName}`);
 
     console.log(data);
     return data.Item;
