@@ -27,7 +27,7 @@ describe('createAd', () => {
 
     })
     test('checkAdObject returning a false returns a 400 Bad Request', () => {
-
+  
     })
     test('incorrect HTTP Method returns a 405 Method Not Allowed', async () => {
       const eventNotPostMethod = {
