@@ -11,3 +11,21 @@ provider:
 functions:
   hello:
     handler: handler.hello
+
+
+resources:
+  Resources:
+    discountTable:
+      Type: AWS::DynamoDB::Table
+      Properties:
+        TableName: discountTable
+        AttributeDefinitions:
+          - AttributeName: discountId
+            AttributeType: S
+          - AttributeName: discountType
+            AttributeType: S
+          - AttributeName: adType
+            AttributeType: S
+        KeySchema:
+          - AttributeName: discountId
+            KeyType: HASH
