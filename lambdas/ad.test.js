@@ -29,7 +29,7 @@ describe('createAd', () => {
     test('checkAdObject returning a false returns a 400 Bad Request', () => {
 
     })
-    test('incorrect HTTP Method returns a 405 Method Not Allowed', () => {
+    test('incorrect HTTP Method returns a 405 Method Not Allowed', async () => {
       const eventNotPostMethod = {
         ...event,
         httpMethod: 'GET'
@@ -39,7 +39,7 @@ describe('createAd', () => {
         statusType: 'Method Not Allowed',
         body: JSON.stringify({ message: 'Must use POST Method to add a user.' })
       }
-      const response = createAd(eventNotPostMethod)
+      const response = await createAd(eventNotPostMethod)
       expect(response).toMatchObject(expectedResponse)
 
     })
