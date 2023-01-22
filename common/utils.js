@@ -7,14 +7,11 @@ const checkAdObject = ad => {
     if ((key === 'name' || key === 'description') && typeof value !== 'string') result = false
     if (key === 'price' && typeof value !== 'number') result = false
   })
-  console.log(`result: ${result}`)
   return result
 }
 
 const checkDiscountObject = discount => {
-  console.log(`I was hit 1`)
   if (!discount.discountType) return false;
-  console.log(`I was hit 2`)
   const { discountType } = discount;
   let result = true
   const reducedChargeKeys = ['companyName', 'discountType', 'adType', 'qtyBought', 'qtyCharged']
@@ -23,9 +20,7 @@ const checkDiscountObject = discount => {
     case 'Reduced Charge':
       Object.entries(discount).forEach(([key, value], index) => {
         if (!reducedChargeKeys.includes(key)) result = false
-        console.log(`result wong 1: ${result}`)
         if ((key === 'discountType' || key === 'adType') && typeof value !== 'string') result = false
-        console.log(`result wong 2: ${result}`)
         if ((key === 'qtyBought' || key === 'qtyCharged') && typeof value !== 'number') result = false
       })
       break;
@@ -40,8 +35,18 @@ const checkDiscountObject = discount => {
       result = false
       break;
   }
-  console.log(`result: ${result}`)
   return result
 }
 
-module.exports = { checkAdObject, checkDiscountObject }
+const checkSaleObject = sale => {
+  let result = true
+  const keys = ['companyName', 'adType', 'qty']
+  Object.entries(sale).forEach(([key, value], index) => {
+    if (!keys.includes(key)) result = false
+    if ((key === 'companyName' || key === 'adType') && typeof value !== 'string') result = false
+    if (key === 'qty' && typeof value !== 'number') result = false
+  })
+  return result
+}
+
+module.exports = { checkAdObject, checkDiscountObject, checkSaleObject }

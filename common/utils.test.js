@@ -1,4 +1,4 @@
-const { checkAdObject, checkDiscountObject } = require('./utils')
+const { checkAdObject, checkDiscountObject, checkSaleObject } = require('./utils')
 
 describe('checkAdObject', () => {
   const ad = {
@@ -74,5 +74,26 @@ describe('checkDiscountObject', () => {
     }
     const result = checkDiscountObject(errorReducedChargeDiscount)
     expect(result).toBeFalsy()
-  })    
+  })
+})
+
+describe('checkSaleObject', () => {
+  const sale = {
+    companyName: 'NAB',
+    adType: "Classic Ad",
+    qty: 3
+  }
+  test('correct sale object returns a true', () => {
+    const result = checkSaleObject(sale)
+    expect(result).toBeTruthy()
+  })
+  test('incorrect sale object returns a false', () => {
+    const incorrectSale = {
+      companyName: 'NAB',
+      adType: "Classic Ad",
+      qty: "3"
+    }
+    const result = checkSaleObject(incorrectSale)
+    expect(result).toBeFalsy()
+  })
 })

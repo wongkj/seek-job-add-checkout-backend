@@ -13,6 +13,7 @@ describe('createDiscount', () => {
     path: '/ad',
     httpMethod: 'POST',
     body: {
+        companyName: 'NAB',
         discountType: 'Reduced Charge',
         adType: "Classic Ad",
         qtyBought: 3,
