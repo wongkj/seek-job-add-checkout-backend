@@ -7,28 +7,34 @@ jest.mock('../common/Dynamo')
 
 
 describe('createAd', () => {
-  beforeEach(() => {
-
-  })
+  const event = {
+    resource: '/',
+    path: '/ad',
+    httpMethod: 'POST',
+    body: {
+        name: 'New Ad Type',
+        price: 400.00,
+        description: 'This is a new ad type.'
+    },
+    queryStringParameters: null,
+    pathParameters: null
+  }  
   describe('successfully creating a new ad in the adTable', () => {
-    test('correct arguments returns a 200 Ok', () => {
-
+    beforeEach(() => {
+      jest.resetAllMocks()
+    })    
+    test('correct arguments returns a 200 Ok', async () => {
+      const expectedResponse = {
+        statusCode: 200,
+        statusType: 'OK',
+        body: JSON.stringify({ message: 'Successfully inserted new Ad into the Ad Table.' })        
+      }      
+      mockCheckAdObject.mockReturnValue(false)
+      const response = await createAd(event)
+      expect(response).toMatchObject(expectedResponse)
     })
   })
   describe('failed to create a new ad in the adTable', () => {
-    const event = {
-      resource: '/',
-      path: '/ad',
-      httpMethod: 'POST',
-      body: {
-          name: 'New Ad Type',
-          price: 400.00,
-          description: 'This is a new ad type.'
-      },
-      queryStringParameters: null,
-      pathParameters: null
-    }
-
     beforeEach(() => {
       jest.resetAllMocks()
     })
