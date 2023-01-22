@@ -24,7 +24,7 @@ class DynamoDB {
     const params = {
       TableName: this.#tableName,
       Key: {
-        ID: id
+        id: id
       }
     }
     const data = await this.#documentClient

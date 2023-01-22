@@ -27,12 +27,15 @@ module.exports.getAd = async event => {
     return Responses._405({ message: 'Must use GET Method to get an add.' })
   }
   if (!event.pathParameters || !event.pathParameters.id) {
-    return Responses._400({ message: 'missing the id from the path' });
+    return Responses._400({ message: 'Missing the id from the path.' });
   }
+  console.log(`id: ${event.pathParameters.id}`)
+  const { id } = event.pathParameters
   const dynamo = new DynamoDB(adTable)
   const ad = await dynamo.getItem(id)
+  console.log(`ad: ${JSON.stringify(ad, null, 2)}`)
   if (!ad) {
-    return Responses._500({ message: 'Error getting ad from Dynamo Table' })
+    return Responses._500({ message: 'Error getting ad from Dynamo Table.' })
   }
   return Responses._200({ ad })
 }

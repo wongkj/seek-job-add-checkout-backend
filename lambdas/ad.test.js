@@ -1,4 +1,4 @@
-const { createAd } = require('./ad');
+const { createAd, getAd } = require('./ad');
 const { checkAdObject: mockCheckAdObject } = require('../common/utils');
 const DynamoDB = require('../common/Dynamo')
 
@@ -24,7 +24,7 @@ describe('createAd', () => {
     beforeEach(() => {
       jest.resetAllMocks()
     })    
-    test('correct arguments returns a 200 Ok', async () => {
+    test('successfully getting an ad returns a 200 Ok', async () => {
       // const expectedResponse = {
       //   statusCode: 200,
       //   statusType: 'OK',
@@ -38,7 +38,7 @@ describe('createAd', () => {
       // expect(response).toMatchObject(expectedResponse)
     })
   })
-  describe('failed to create a new ad in the adTable', () => {
+  describe('failed to get an existing ad from the adTable', () => {
     beforeEach(() => {
       jest.resetAllMocks()
     })
@@ -82,6 +82,87 @@ describe('createAd', () => {
       }
       expect(DynamoDB).toHaveBeenCalledTimes(1)
       const response = await createAd(event)
+      expect(response).toMatchObject(expectedResponse)
+
+    })
+  })
+})
+
+describe('getAd', () => {
+  const tableName = 'adTable'
+  const event = {
+    resource: '/',
+    path: '/ad',
+    httpMethod: 'GET',
+    queryStringParameters: null,
+    pathParameters: {
+      id: "112233"
+    }
+  }  
+  describe('successfully creating a new ad in the adTable', () => {
+    beforeEach(() => {
+      jest.resetAllMocks()
+    })    
+    test('correct arguments returns a 200 Ok', async () => {
+      // const expectedResponse = {
+      //   statusCode: 200,
+      //   statusType: 'OK',
+      //   body: JSON.stringify({ message: 'Successfully inserted new Ad into the Ad Table.' })        
+      // }      
+      // mockCheckAdObject.mockReturnValue(true)
+      // const dynamodb = new DynamoDB(tableName)
+      // dynamodb.insertItem = jest.fn()
+      // dynamodb.insertItem.mockReturnValue(() => 1)
+      // const response = await createAd(event)
+      // expect(response).toMatchObject(expectedResponse)
+    })
+  })
+  describe('failed to get ad from adTable', () => {
+    beforeEach(() => {
+      jest.resetAllMocks()
+    })
+    test('incorrect HTTP Method returns a 405 Method Not Allowed', async () => {
+      const eventNotGetMethod = {
+        ...event,
+        httpMethod: 'POST'
+      }
+      const expectedResponse = {
+        statusCode: 405,
+        statusType: 'Method Not Allowed',
+        body: JSON.stringify({ message: 'Must use GET Method to get an add.' })        
+      }     
+      const response = await getAd(eventNotGetMethod)
+      expect(response).toMatchObject(expectedResponse)
+    })
+    test('no id returns a 400 Bad Request.', async () => {
+      const eventNoId = {
+        ...event,
+        pathParameters: null
+      }
+      const expectedResponse = {
+        statusCode: 400,
+        statusType: 'Bad Request',
+        body: JSON.stringify({ message: 'Missing the id from the path.' })        
+      }     
+      const response = await getAd(eventNoId)
+      expect(response).toMatchObject(expectedResponse)
+    })    
+    test('get action in the Dynamo adTable causing an error then 500 Internal Server Error is returned', async () => {
+      expect(DynamoDB).not.toHaveBeenCalled()
+      const dynamodb = new DynamoDB(tableName)
+      mockCheckAdObject.mockReturnValue(true)
+      dynamodb.getItem = jest.fn()
+      dynamodb.getItem.mockImplementation(() => {
+        throw new Error()
+      })
+      const expectedResponse = {
+        statusCode: 500,
+        statusType: 'Internal Server Error',
+        body: JSON.stringify({ message: 'Error getting ad from Dynamo Table.' })        
+      }
+      expect(DynamoDB).toHaveBeenCalledTimes(1)
+      console.log(`event jason: ${JSON.stringify(event, null, 2)}`)
+      const response = await getAd(event)
       expect(response).toMatchObject(expectedResponse)
 
     })
