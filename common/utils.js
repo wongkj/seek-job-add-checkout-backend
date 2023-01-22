@@ -13,8 +13,8 @@ const checkAdObject = ad => {
       result = false
     }
   })
+  console.log(`result: ${result}`)
   return result
-  
 }
 
 module.exports = { checkAdObject }

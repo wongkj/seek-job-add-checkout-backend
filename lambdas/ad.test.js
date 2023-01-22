@@ -1,4 +1,8 @@
 const { createAd } = require('./ad');
+const { checkAdObject: mockCheckAdObject } = require('../common/utils');
+
+jest.mock('../common/utils')
+
 
 describe('createAd', () => {
   beforeEach(() => {
@@ -24,10 +28,18 @@ describe('createAd', () => {
     }
 
     beforeEach(() => {
-
+      jest.resetAllMocks()
     })
-    test('checkAdObject returning a false returns a 400 Bad Request', () => {
-  
+    test('checkAdObject returning a false returns a 400 Bad Request', async () => {
+      const expectedResponse = {
+        statusCode: 400,
+        statusType: 'Bad Request',
+        body: JSON.stringify({ message: 'Ad properties were incorrect. Cannot add user to database.' })        
+      }      
+      mockCheckAdObject.mockReturnValue(false)
+      const response = await createAd(event)
+      expect(response).toMatchObject(expectedResponse)
+
     })
     test('incorrect HTTP Method returns a 405 Method Not Allowed', async () => {
       const eventNotPostMethod = {
