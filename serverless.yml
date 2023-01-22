@@ -25,24 +25,26 @@ resources:
       Properties:
         TableName: discountTable
         AttributeDefinitions:
-          - AttributeName: discountId
+          - AttributeName: id
             AttributeType: S
         KeySchema:
-          - AttributeName: discountId
+          - AttributeName: id
             KeyType: HASH
         ProvisionedThroughput:
           ReadCapacityUnits: 1
           WriteCapacityUnits: 1
+        BillingMode: PAY_PER_REQUEST
     adTable:
       Type: AWS::DynamoDB::Table
       Properties:
         TableName: adTable
         AttributeDefinitions:
-          - AttributeName: adId
+          - AttributeName: id
             AttributeType: S
         KeySchema:
-          - AttributeName: adId
+          - AttributeName: id
             KeyType: HASH
         ProvisionedThroughput:
           ReadCapacityUnits: 1
-          WriteCapacityUnits: 1        
+          WriteCapacityUnits: 1
+        BillingMode: PAY_PER_REQUEST    
