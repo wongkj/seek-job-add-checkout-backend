@@ -1,6 +1,6 @@
 service: seek-job-add-checkout-backend
 
-frameworkVersion: '3'
+frameworkVersion: '2'
 
 provider:
   name: aws
@@ -9,8 +9,13 @@ provider:
   lambdaHashingVersion: 20201221
 
 functions:
-  hello:
-    handler: handler.hello
+  createAd:
+    handler: lambdas/ad.createAd
+    events:
+      - http:
+          path: ad
+          method: POST
+          cors: true
 
 
 resources:
@@ -22,10 +27,22 @@ resources:
         AttributeDefinitions:
           - AttributeName: discountId
             AttributeType: S
-          - AttributeName: discountType
-            AttributeType: S
-          - AttributeName: adType
-            AttributeType: S
         KeySchema:
           - AttributeName: discountId
             KeyType: HASH
+        ProvisionedThroughput:
+          ReadCapacityUnits: 1
+          WriteCapacityUnits: 1
+    adTable:
+      Type: AWS::DynamoDB::Table
+      Properties:
+        TableName: adTable
+        AttributeDefinitions:
+          - AttributeName: adId
+            AttributeType: S
+        KeySchema:
+          - AttributeName: adId
+            KeyType: HASH
+        ProvisionedThroughput:
+          ReadCapacityUnits: 1
+          WriteCapacityUnits: 1        
