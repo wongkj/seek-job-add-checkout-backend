@@ -1,7 +1,9 @@
 const { createAd } = require('./ad');
 const { checkAdObject: mockCheckAdObject } = require('../common/utils');
+const DynamoDB = require('../common/Dynamo')
 
 jest.mock('../common/utils')
+jest.mock('../common/Dynamo')
 
 
 describe('createAd', () => {
@@ -55,7 +57,19 @@ describe('createAd', () => {
       expect(response).toMatchObject(expectedResponse)
 
     })
-    test('put action in the Dynamo adTable causing an error then 500 Internal Server Error is returned', () => {
+    test('put action in the Dynamo adTable causing an error then 500 Internal Server Error is returned', async () => {
+      mockCheckAdObject.mockReturnValue(true)
+      DynamoDB.insertItem = jest.fn()
+      DynamoDB.insertItem.mockImplementation(() => {
+        throw new Error()
+      })
+      const expectedResponse = {
+        statusCode: 500,
+        statusType: 'Internal Server Error',
+        body: JSON.stringify({ message: 'Error sending message to SQS queue' })        
+      }         
+      const response = createAd(event)
+      expect(response).toMatchObject(expectedResponse)
 
     })
   })
