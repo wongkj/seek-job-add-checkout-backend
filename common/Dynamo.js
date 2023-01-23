@@ -38,6 +38,7 @@ class DynamoDB {
   }
 
   async insertItem(data) {
+    console.log(`insertItem was called`)
     const id = uuid4()
 
     const newItem = {
@@ -54,6 +55,100 @@ class DynamoDB {
     if (!res) throw new Error(`There was an error inserting data into table ${this.#tableName}`)
 
     return data
+  }
+
+  async scanDiscounts(obj) {
+    console.log(`obj: ${JSON.stringify(obj, null, 2)}`)
+    const { companyName } = obj;
+    const params = {
+      FilterExpression: "#companyName = :companyName",
+      ExpressionAttributeNames: {
+        "#companyName": "companyName"
+      },
+      ExpressionAttributeValues: {
+        ":companyName": companyName
+      },
+      TableName: this.#tableName,
+    };
+
+    const res = await this.#documentClient.scan(params).promise();
+    if (!res) throw new Error(`There was an error scanning for items in the table ${this.#tableName}`)
+    console.log(`res: ${JSON.stringify(res, null, 2)}`)
+    return res    
+  }
+
+  async scanAds(obj) {
+    console.log(`obj: ${JSON.stringify(obj, null, 2)}`)
+    const { adType: name } = obj;
+    const params = {
+      FilterExpression: "#name = :name",
+      ExpressionAttributeNames: {
+        "#name": "name"
+      },
+      ExpressionAttributeValues: {
+        ":name": name
+      },
+      TableName: this.#tableName,
+    };
+
+    const res = await this.#documentClient.scan(params).promise();
+    if (!res) throw new Error(`There was an error scanning for items in the table ${this.#tableName}`)
+    console.log(`res: ${JSON.stringify(res, null, 2)}`)
+    return res    
+  }
+
+  #buildUpdateExpression(item){
+    const { companyName = '', discountType = '', adType = '', qtyBought = '', qtyCharged = '', newPrice = '' } = item;
+    let expression = ''
+    if (companyName !== '') expression += '#companyName = :companyName,';
+    if (discountType !== '') expression += '#discountType = :discountType,';
+    if (adType !== '') expression += '#adType = :adType,';
+    if (qtyBought !== '') expression += '#qtyBought = :qtyBought,';
+    if (qtyCharged !== '') expression += '#qtyCharged = :qtyCharged,';
+    if (newPrice !== '') expression += '#newPrice = :newPrice,';
+    return expression.substring(0, expression.length - 1);
+  }
+
+  #buildUpdateExpressionAttributeNames(item) {
+    const { companyName = '', discountType = '', adType = '', qtyBought = '', qtyCharged = '', newPrice = '' } = item;
+    let obj = {}
+    if (companyName !== '') obj["#companyName"] = "companyName";
+    if (discountType !== '') obj["#discountType"] = "discountType";
+    if (adType !== '') obj["#adType"] = "adType";
+    if (qtyBought !== '') obj["#qtyBought"] = "qtyBought";
+    if (qtyCharged !== '') obj["#qtyCharged"] = "qtyCharged";
+    if (newPrice !== '') obj["#newPrice"] = "newPrice";
+    return obj;
+  }
+
+  #buildUpdateExpressionAttributeValues(item) {
+    const { companyName = '', discountType = '', adType = '', qtyBought = '', qtyCharged = '', newPrice = '' } = item;
+    let obj = {}
+    if (companyName !== '') obj[":companyName"] = companyName;
+    if (discountType !== '') obj[":discountType"] = discountType;
+    if (adType !== '') obj[":adType"] = adType;
+    if (qtyBought !== '') obj[":qtyBought"] = qtyBought;
+    if (qtyCharged !== '') obj[":qtyCharged"] = qtyCharged;
+    if (newPrice !== '') obj[":newPrice"] = newPrice;
+    return obj;
+  }
+
+  async updateItems(discountId, item) {
+    console.log(`updateItems was called`)
+    console.log(`discountId: ${discountId}, item: ${JSON.stringify(item, null, 2)}`)
+    const params = {
+      Key: {
+        id: discountId
+      },
+      TableName: this.#tableName,
+      UpdateExpression: `SET ${this.#buildUpdateExpression(item)}`,
+      ExpressionAttributeNames: this.#buildUpdateExpressionAttributeNames(item),      
+      ExpressionAttributeValues: this.#buildUpdateExpressionAttributeValues(item),
+    };
+    const res = await this.#documentClient.update(params).promise();
+    if (!res) throw new Error(`There was an error updating items in the table ${this.#tableName}`)
+
+    return res;
   }
 
 }

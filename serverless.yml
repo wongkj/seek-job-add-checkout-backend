@@ -53,6 +53,17 @@ functions:
     environment:
       DISCOUNT_TABLE: { Ref: DiscountTable }      
 
+  calculateSale:
+    handler: lambdas/sale.calculateSale
+    events:
+      - http:
+          path: sale
+          method: POST
+          cors: true
+    environment:
+      DISCOUNT_TABLE: { Ref: DiscountTable }
+      AD_TABLE: { Ref: AdTable }
+
 
 resources:
   Resources:
@@ -83,4 +94,4 @@ resources:
         # ProvisionedThroughput:
         #   ReadCapacityUnits: 1
         #   WriteCapacityUnits: 1
-        BillingMode: PAY_PER_REQUEST    
+        BillingMode: PAY_PER_REQUEST

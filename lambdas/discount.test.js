@@ -14,19 +14,17 @@ describe('createDiscount', () => {
     httpMethod: 'POST',
     body: {
         companyName: 'NAB',
-        discountType: 'Reduced Charge',
         adType: "Classic Ad",
-        qtyBought: 3,
-        qtyCharged: 2
+        qty: 7
     },
     queryStringParameters: null,
     pathParameters: null
   }  
-  describe('successfully creating a new ad in the adTable', () => {
+  describe('successfully calculates a sale', () => {
     beforeEach(() => {
       jest.resetAllMocks()
     })    
-    test('successfully getting an ad returns a 200 Ok', async () => {
+    test('successfully calculating a sale returns a 200 Ok', async () => {
       // const expectedResponse = {
       //   statusCode: 200,
       //   statusType: 'OK',
@@ -40,7 +38,7 @@ describe('createDiscount', () => {
       // expect(response).toMatchObject(expectedResponse)
     })
   })
-  describe('failed to get an existing ad from the adTable', () => {
+  describe('failed to calculate a sale', () => {
     beforeEach(() => {
       jest.resetAllMocks()
     })
@@ -73,6 +71,12 @@ describe('createDiscount', () => {
       expect(DynamoDB).not.toHaveBeenCalled()
       const dynamodb = new DynamoDB(tableName)
       mockCheckDiscountObject.mockReturnValue(true)
+      dynamodb.scanDiscounts = jest.fn()
+      dynamodb.scanDiscounts.mockImplementation(() => {
+        return {
+          Count: 1
+        }
+      })
       dynamodb.insertItem = jest.fn()
       dynamodb.insertItem.mockImplementation(() => {
         throw new Error()
