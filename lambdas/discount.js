@@ -1,6 +1,6 @@
-const Responses = require('../common/Responses');
 const { checkDiscountObject, createResponse } = require('../common/utils');
 const DynamoDB = require('../common/Dynamo');
+const { MethodIncorrectError, BadRequestError, PageNotFoundError, InternalServerError } = require('../common/errors')
 
 const discountTable = process.env.DISCOUNT_TABLE
 
@@ -14,18 +14,21 @@ const getDiscountIdIfAdTypeExists = ({ Items }, discount) => {
   return discountId
 }
 
+module.exports.test = async (event, context, callback) => {
+
+}
+
 module.exports.createDiscount = async (event, context, callback) => {
   if (event.httpMethod !== 'POST') {
-    callback(null, createResponse(405, { message: 'Must use POST Method to add a discount.' }))
+    throw new MethodIncorrectError('Must use POST Method to add a discount.')
   }
   const discount = typeof event.body === 'string' ? JSON.parse(event.body) : event.body
   const validDiscountObject = checkDiscountObject(discount)
   if (!validDiscountObject) {
-    callback(null, createResponse(400, { message: 'Discount properties were incorrect. Cannot create new discount.' }))
+    throw new BadRequestError('Discount properties were incorrect. Cannot create new discount.')
   }
   const dynamo = new DynamoDB(discountTable)
   const doesCompanyExist = await dynamo.scanDiscounts(discount)
-  console.log(`doesCompanyExist: ${JSON.stringify(doesCompanyExist, null, 2)}`)
 
   let response
 
@@ -37,25 +40,27 @@ module.exports.createDiscount = async (event, context, callback) => {
   }
   
   if (!response) {
-    callback(null, createResponse(500, { message: 'Error inserting item into Dynamo Table' }))
+    throw new InternalServerError('Error inserting item into Dynamo Table')
   }
   callback(null, createResponse(200, { message: 'Successfully inserted new Discount into the Discount Table.' }))
 }
 
+
+
 module.exports.getDiscount = async (event, context, callback) => {
   if (event.httpMethod !== 'GET') {
-    callback(null, createResponse(405, { message: 'Must use GET Method to get a discount.' }))
+    throw new MethodIncorrectError('Must use GET Method to get a discount.')
   }
   if (!event.pathParameters || !event.pathParameters.id) {
-    callback(null, createResponse(400, { message: 'Missing the id from the path.'  }))
+    throw new BadRequestError('Missing the id from the path.')
   }
-  console.log(`id: ${event.pathParameters.id}`)
+
   const { id } = event.pathParameters
   const dynamo = new DynamoDB(discountTable)
   const discount = await dynamo.getItem(id)
 
   if (!discount) {
-    callback(null, createResponse(500, { message: 'Error getting discount from Dynamo Table.' }))
+    throw new PageNotFoundError('Error getting discount from Dynamo Table.')
   }
   callback(null, createResponse(200, { discount }))
 }

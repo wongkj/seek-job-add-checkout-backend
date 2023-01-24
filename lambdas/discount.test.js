@@ -5,7 +5,6 @@ const DynamoDB = require('../common/Dynamo')
 jest.mock('../common/utils')
 jest.mock('../common/Dynamo')
 
-
 describe('createDiscount', () => {
   const tableName = 'discountTable'
   const eventReducedCharge = {
@@ -20,7 +19,7 @@ describe('createDiscount', () => {
     queryStringParameters: null,
     pathParameters: null
   }  
-  describe('successfully calculates a sale', () => {
+  describe('successfully created a Discount', () => {
     beforeEach(() => {
       jest.resetAllMocks()
     })    
@@ -38,20 +37,41 @@ describe('createDiscount', () => {
       // expect(response).toMatchObject(expectedResponse)
     })
   })
-  describe('failed to calculate a sale', () => {
+  describe('failed to create a Discount', () => {
     beforeEach(() => {
       jest.resetAllMocks()
     })
-    test('checkAdObject returning a false returns a 400 Bad Request', async () => {
-      const expectedResponse = {
-        statusCode: 400,
-        statusType: 'Bad Request',
-        body: JSON.stringify({ message: 'Discount properties were incorrect. Cannot create new discount.' })        
-      }      
-      mockCheckDiscountObject.mockReturnValue(false)
-      const response = await createDiscount(eventReducedCharge)
-      expect(response).toMatchObject(expectedResponse)
+    test.only('checkDiscountObject returning a false returns a 400 Bad Request', async () => {
+      // const expectedResponse = {
+      //   statusCode: 400,
+      //   statusType: 'Bad Request',
+      //   body: JSON.stringify({ message: 'Discount properties were incorrect. Cannot create new discount.' })        
+      // }
 
+      const event = {
+        resource: '/',
+        path: '/ad',
+        httpMethod: 'GET',
+        body: {
+            companyName: 'NAB',
+            adType: "Classic Ad",
+            qty: 7
+        },
+        queryStringParameters: null,
+        pathParameters: null
+      }        
+
+      const context = {}
+
+      const callback = jest.fn().mockImplementation((errorMsg) => {
+        if (errorMsg) throw new Error(errorMsg);
+      });
+
+      mockCheckDiscountObject.mockReturnValue(false)
+      await expect(createDiscount(event, context, callback)).rejects.toThrow("what")
+      // const response = await createDiscount(eventReducedCharge)
+      // expect(response).toMatchObject(expectedResponse)
+      
     })
     test('incorrect HTTP Method returns a 405 Method Not Allowed', async () => {
       const eventNotPostMethod = {

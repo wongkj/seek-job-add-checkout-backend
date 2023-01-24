@@ -210,7 +210,7 @@
                 "S3Bucket": {
                   "Ref": "ServerlessDeploymentBucket"
                 },
-                "S3Key": "serverless/seek-job-add-checkout-backend/dev/1674520625725-2023-01-24T00:37:05.725Z/seek-job-add-checkout-backend.zip"
+                "S3Key": "serverless/seek-job-add-checkout-backend/dev/1674550403991-2023-01-24T08:53:23.991Z/seek-job-add-checkout-backend.zip"
               },
               "Handler": "lambdas/ad.createAd",
               "Runtime": "nodejs14.x",
@@ -242,7 +242,7 @@
                 "S3Bucket": {
                   "Ref": "ServerlessDeploymentBucket"
                 },
-                "S3Key": "serverless/seek-job-add-checkout-backend/dev/1674520625725-2023-01-24T00:37:05.725Z/seek-job-add-checkout-backend.zip"
+                "S3Key": "serverless/seek-job-add-checkout-backend/dev/1674550403991-2023-01-24T08:53:23.991Z/seek-job-add-checkout-backend.zip"
               },
               "Handler": "lambdas/ad.getAd",
               "Runtime": "nodejs14.x",
@@ -274,7 +274,7 @@
                 "S3Bucket": {
                   "Ref": "ServerlessDeploymentBucket"
                 },
-                "S3Key": "serverless/seek-job-add-checkout-backend/dev/1674520625725-2023-01-24T00:37:05.725Z/seek-job-add-checkout-backend.zip"
+                "S3Key": "serverless/seek-job-add-checkout-backend/dev/1674550403991-2023-01-24T08:53:23.991Z/seek-job-add-checkout-backend.zip"
               },
               "Handler": "lambdas/discount.createDiscount",
               "Runtime": "nodejs14.x",
@@ -306,7 +306,7 @@
                 "S3Bucket": {
                   "Ref": "ServerlessDeploymentBucket"
                 },
-                "S3Key": "serverless/seek-job-add-checkout-backend/dev/1674520625725-2023-01-24T00:37:05.725Z/seek-job-add-checkout-backend.zip"
+                "S3Key": "serverless/seek-job-add-checkout-backend/dev/1674550403991-2023-01-24T08:53:23.991Z/seek-job-add-checkout-backend.zip"
               },
               "Handler": "lambdas/discount.getDiscount",
               "Runtime": "nodejs14.x",
@@ -338,7 +338,7 @@
                 "S3Bucket": {
                   "Ref": "ServerlessDeploymentBucket"
                 },
-                "S3Key": "serverless/seek-job-add-checkout-backend/dev/1674520625725-2023-01-24T00:37:05.725Z/seek-job-add-checkout-backend.zip"
+                "S3Key": "serverless/seek-job-add-checkout-backend/dev/1674550403991-2023-01-24T08:53:23.991Z/seek-job-add-checkout-backend.zip"
               },
               "Handler": "lambdas/sale.calculateSale",
               "Runtime": "nodejs14.x",
@@ -366,54 +366,54 @@
               "CalculateSaleLogGroup"
             ]
           },
-          "CreateAdLambdaVersion71iowkz8YBwqsCm38Rv6P1mp6ZhcUQ97Jy0VgKo92g": {
+          "CreateAdLambdaVersionsYELNECD7wrxEea5VyeRRGGR2mhBdK94wiDwgrueaw": {
             "Type": "AWS::Lambda::Version",
             "DeletionPolicy": "Retain",
             "Properties": {
               "FunctionName": {
                 "Ref": "CreateAdLambdaFunction"
               },
-              "CodeSha256": "UrTshCUC1SAIDJ8gDBfOBk9Xb54XSonqFD+6UwYeJxU="
+              "CodeSha256": "Lz57u7Wwb0hqvLQ6cQ5BYCrOSCel+evi3z2I5rCbW54="
             }
           },
-          "GetAdLambdaVersiont27jEVuR04wbUlSS8ajtF92n3qHwPYL5zmsc8ijvY": {
+          "GetAdLambdaVersionEOHnYOFtk6d1bDaPqKDZjDFIE8Rv5kDFieE77ARC74": {
             "Type": "AWS::Lambda::Version",
             "DeletionPolicy": "Retain",
             "Properties": {
               "FunctionName": {
                 "Ref": "GetAdLambdaFunction"
               },
-              "CodeSha256": "UrTshCUC1SAIDJ8gDBfOBk9Xb54XSonqFD+6UwYeJxU="
+              "CodeSha256": "Lz57u7Wwb0hqvLQ6cQ5BYCrOSCel+evi3z2I5rCbW54="
             }
           },
-          "CreateDiscountLambdaVersionasrEnHpdEOwbVcTvpWGkUpLX3kECjmqQzX76DyMK50": {
+          "CreateDiscountLambdaVersionMWFlU2GghANiV6bBPrkpX21ebZO5evBrOI2YygcPl3c": {
             "Type": "AWS::Lambda::Version",
             "DeletionPolicy": "Retain",
             "Properties": {
               "FunctionName": {
                 "Ref": "CreateDiscountLambdaFunction"
               },
-              "CodeSha256": "UrTshCUC1SAIDJ8gDBfOBk9Xb54XSonqFD+6UwYeJxU="
+              "CodeSha256": "Lz57u7Wwb0hqvLQ6cQ5BYCrOSCel+evi3z2I5rCbW54="
             }
           },
-          "GetDiscountLambdaVersionvE9mqb6iV3Ew92kuY3UPA7zPs3fIeV0RNIxa7MOic": {
+          "GetDiscountLambdaVersionkXmQyyJiM3NAEmUlJEENYSstTOxT7KnBPwETbRebw": {
             "Type": "AWS::Lambda::Version",
             "DeletionPolicy": "Retain",
             "Properties": {
               "FunctionName": {
                 "Ref": "GetDiscountLambdaFunction"
               },
-              "CodeSha256": "UrTshCUC1SAIDJ8gDBfOBk9Xb54XSonqFD+6UwYeJxU="
+              "CodeSha256": "Lz57u7Wwb0hqvLQ6cQ5BYCrOSCel+evi3z2I5rCbW54="
             }
           },
-          "CalculateSaleLambdaVersionRvvLD8pbpKtGMaXFM6Pt97ahT3qJFdGoxVAu8UDgt0": {
+          "CalculateSaleLambdaVersionrufn3lmVUTp99rlx2OPBAvXtxGTvDEKTy3sxyUcOZq4": {
             "Type": "AWS::Lambda::Version",
             "DeletionPolicy": "Retain",
             "Properties": {
               "FunctionName": {
                 "Ref": "CalculateSaleLambdaFunction"
               },
-              "CodeSha256": "UrTshCUC1SAIDJ8gDBfOBk9Xb54XSonqFD+6UwYeJxU="
+              "CodeSha256": "Lz57u7Wwb0hqvLQ6cQ5BYCrOSCel+evi3z2I5rCbW54="
             }
           },
           "ApiGatewayRestApi": {
@@ -952,7 +952,7 @@
               "CalculateSaleLambdaPermissionApiGateway"
             ]
           },
-          "ApiGatewayDeployment1674520619621": {
+          "ApiGatewayDeployment1674550397850": {
             "Type": "AWS::ApiGateway::Deployment",
             "Properties": {
               "RestApiId": {
@@ -1209,7 +1209,7 @@
           "CreateAdLambdaFunctionQualifiedArn": {
             "Description": "Current Lambda function version",
             "Value": {
-              "Ref": "CreateAdLambdaVersion71iowkz8YBwqsCm38Rv6P1mp6ZhcUQ97Jy0VgKo92g"
+              "Ref": "CreateAdLambdaVersionsYELNECD7wrxEea5VyeRRGGR2mhBdK94wiDwgrueaw"
             },
             "Export": {
               "Name": "sls-seek-job-add-checkout-backend-dev-CreateAdLambdaFunctionQualifiedArn"
@@ -1218,7 +1218,7 @@
           "GetAdLambdaFunctionQualifiedArn": {
             "Description": "Current Lambda function version",
             "Value": {
-              "Ref": "GetAdLambdaVersiont27jEVuR04wbUlSS8ajtF92n3qHwPYL5zmsc8ijvY"
+              "Ref": "GetAdLambdaVersionEOHnYOFtk6d1bDaPqKDZjDFIE8Rv5kDFieE77ARC74"
             },
             "Export": {
               "Name": "sls-seek-job-add-checkout-backend-dev-GetAdLambdaFunctionQualifiedArn"
@@ -1227,7 +1227,7 @@
           "CreateDiscountLambdaFunctionQualifiedArn": {
             "Description": "Current Lambda function version",
             "Value": {
-              "Ref": "CreateDiscountLambdaVersionasrEnHpdEOwbVcTvpWGkUpLX3kECjmqQzX76DyMK50"
+              "Ref": "CreateDiscountLambdaVersionMWFlU2GghANiV6bBPrkpX21ebZO5evBrOI2YygcPl3c"
             },
             "Export": {
               "Name": "sls-seek-job-add-checkout-backend-dev-CreateDiscountLambdaFunctionQualifiedArn"
@@ -1236,7 +1236,7 @@
           "GetDiscountLambdaFunctionQualifiedArn": {
             "Description": "Current Lambda function version",
             "Value": {
-              "Ref": "GetDiscountLambdaVersionvE9mqb6iV3Ew92kuY3UPA7zPs3fIeV0RNIxa7MOic"
+              "Ref": "GetDiscountLambdaVersionkXmQyyJiM3NAEmUlJEENYSstTOxT7KnBPwETbRebw"
             },
             "Export": {
               "Name": "sls-seek-job-add-checkout-backend-dev-GetDiscountLambdaFunctionQualifiedArn"
@@ -1245,7 +1245,7 @@
           "CalculateSaleLambdaFunctionQualifiedArn": {
             "Description": "Current Lambda function version",
             "Value": {
-              "Ref": "CalculateSaleLambdaVersionRvvLD8pbpKtGMaXFM6Pt97ahT3qJFdGoxVAu8UDgt0"
+              "Ref": "CalculateSaleLambdaVersionrufn3lmVUTp99rlx2OPBAvXtxGTvDEKTy3sxyUcOZq4"
             },
             "Export": {
               "Name": "sls-seek-job-add-checkout-backend-dev-CalculateSaleLambdaFunctionQualifiedArn"
@@ -1404,7 +1404,7 @@
         "timeout": 6,
         "runtime": "nodejs14.x",
         "vpc": {},
-        "versionLogicalId": "CreateAdLambdaVersion71iowkz8YBwqsCm38Rv6P1mp6ZhcUQ97Jy0VgKo92g"
+        "versionLogicalId": "CreateAdLambdaVersionsYELNECD7wrxEea5VyeRRGGR2mhBdK94wiDwgrueaw"
       },
       "getAd": {
         "handler": "lambdas/ad.getAd",
@@ -1445,7 +1445,7 @@
         "timeout": 6,
         "runtime": "nodejs14.x",
         "vpc": {},
-        "versionLogicalId": "GetAdLambdaVersiont27jEVuR04wbUlSS8ajtF92n3qHwPYL5zmsc8ijvY"
+        "versionLogicalId": "GetAdLambdaVersionEOHnYOFtk6d1bDaPqKDZjDFIE8Rv5kDFieE77ARC74"
       },
       "createDiscount": {
         "handler": "lambdas/discount.createDiscount",
@@ -1486,7 +1486,7 @@
         "timeout": 6,
         "runtime": "nodejs14.x",
         "vpc": {},
-        "versionLogicalId": "CreateDiscountLambdaVersionasrEnHpdEOwbVcTvpWGkUpLX3kECjmqQzX76DyMK50"
+        "versionLogicalId": "CreateDiscountLambdaVersionMWFlU2GghANiV6bBPrkpX21ebZO5evBrOI2YygcPl3c"
       },
       "getDiscount": {
         "handler": "lambdas/discount.getDiscount",
@@ -1527,7 +1527,7 @@
         "timeout": 6,
         "runtime": "nodejs14.x",
         "vpc": {},
-        "versionLogicalId": "GetDiscountLambdaVersionvE9mqb6iV3Ew92kuY3UPA7zPs3fIeV0RNIxa7MOic"
+        "versionLogicalId": "GetDiscountLambdaVersionkXmQyyJiM3NAEmUlJEENYSstTOxT7KnBPwETbRebw"
       },
       "calculateSale": {
         "handler": "lambdas/sale.calculateSale",
@@ -1571,7 +1571,7 @@
         "timeout": 6,
         "runtime": "nodejs14.x",
         "vpc": {},
-        "versionLogicalId": "CalculateSaleLambdaVersionRvvLD8pbpKtGMaXFM6Pt97ahT3qJFdGoxVAu8UDgt0"
+        "versionLogicalId": "CalculateSaleLambdaVersionrufn3lmVUTp99rlx2OPBAvXtxGTvDEKTy3sxyUcOZq4"
       }
     },
     "resources": {
@@ -1637,7 +1637,7 @@
     "artifact": "/Users/jasonwong/Documents/code/aws-projects/seek-job-add-checkout-backend/.serverless/seek-job-add-checkout-backend.zip"
   },
   "package": {
-    "artifactDirectoryName": "serverless/seek-job-add-checkout-backend/dev/1674520625725-2023-01-24T00:37:05.725Z",
+    "artifactDirectoryName": "serverless/seek-job-add-checkout-backend/dev/1674550403991-2023-01-24T08:53:23.991Z",
     "artifact": "seek-job-add-checkout-backend.zip"
   }
 }

@@ -19,6 +19,7 @@
   "homepage": "https://github.com/wongkj/seek-job-add-checkout-backend#readme",
   "dependencies": {
     "aws-sdk": "^2.1299.0",
+    "got": "^12.5.3",
     "jest": "^29.3.1",
     "uuid4": "^2.0.3"
   }
