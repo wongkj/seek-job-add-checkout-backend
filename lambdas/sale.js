@@ -1,5 +1,5 @@
 const Responses = require('../common/Responses');
-const { checkSaleObject } = require('../common/utils');
+const { checkSaleObject, createResponse } = require('../common/utils');
 const DynamoDB = require('../common/Dynamo');
 
 const discountTable = process.env.DISCOUNT_TABLE
@@ -27,15 +27,15 @@ const calculateSale = (sale, ads, discounts = null) => {
   return price
 }
 
-module.exports.calculateSale = async event => {
+module.exports.calculateSale = async (event, context, callback) => {
   if (event.httpMethod !== 'POST') {
-    return Responses._405({ message: 'Must use POST Method to calculate.' })
+    callback(null, createResponse(405, { message: 'Must use POST Method to calculate.' }))
   }
   // Check event object to match structure
   const sale = typeof event.body === 'string' ? JSON.parse(event.body) : event.body
   const validSaleObject = checkSaleObject(sale)
   if (!validSaleObject) {
-    return Responses._400({ message: 'Sale properties were incorrect. Cannot calculate the sale.' })
+    callback(null, createResponse(400, { message: 'Sale properties were incorrect. Cannot calculate the sale.' }))
   }
 
   // Search for the ad type
@@ -43,7 +43,7 @@ module.exports.calculateSale = async event => {
   const ads = await dynamoAd.scanAds(sale)
 
   if (!ads.Items) {
-    return Responses._400({ message: 'No ads of that type are being sold.' })
+    callback(null, createResponse(400, { message: 'Sale properties were incorrect. Cannot calculate the sale.' }))
   }
 
   const dynamoDiscount = new DynamoDB(discountTable)
@@ -59,5 +59,5 @@ module.exports.calculateSale = async event => {
     }
   }
 
-  return Responses._200({ totalPrice })
+  callback(null, createResponse(200, { totalPrice }))
 }

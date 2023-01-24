@@ -1,12 +1,11 @@
 service: seek-job-add-checkout-backend
 
-frameworkVersion: '2'
+frameworkVersion: '3'
 
 provider:
   name: aws
   runtime: nodejs14.x
   profile: serverless-admin
-  lambdaHashingVersion: 20201221
   iamRoleStatements:
     - Effect: Allow
       Action:

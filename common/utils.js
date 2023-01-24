@@ -49,4 +49,15 @@ const checkSaleObject = sale => {
   return result
 }
 
-module.exports = { checkAdObject, checkDiscountObject, checkSaleObject }
+const createResponse = (statusCode, body) => {
+  return {
+    statusCode,
+    headers: {
+        "Access-Control-Allow-Origin": "*",
+        "Content-Type": "application/json"
+    },
+    body: JSON.stringify(body)
+  }  
+}
+
+module.exports = { checkAdObject, checkDiscountObject, checkSaleObject, createResponse }

@@ -25,7 +25,7 @@ No setup is required as the API is already running in AWS.
 
 ### Using the Endpoint
 
-The API URL is `https://clw5k0brs2.execute-api.us-east-1.amazonaws.com/dev/`
+The API URL is `https://xkwt2jtj8i.execute-api.us-east-1.amazonaws.com/dev/`
 
 There are 3 resource paths you can navigate to: `/sale`, `/ad`, `/discount`.
 
@@ -77,7 +77,7 @@ There are 3 resource paths you can navigate to: `/sale`, `/ad`, `/discount`.
 `Creating a new Ad`
 - For when you want to create a new Ad type.
 ```
-curl --location --request POST 'https://clw5k0brs2.execute-api.us-east-1.amazonaws.com/dev/ad' \
+curl --location --request POST 'https://xkwt2jtj8i.execute-api.us-east-1.amazonaws.com/dev/ad' \
 --header 'Content-Type: application/json' \
 --data-raw '{
     "name": "Premium Ad",
@@ -89,7 +89,7 @@ curl --location --request POST 'https://clw5k0brs2.execute-api.us-east-1.amazona
 - For when you want to create a new Discount for a customer where a certain Ad type will be charged less money to the customer.
 - The Discount is specific to the customer name so when you want to calculate the price of an Ad to a customer then the discount will be applied based on the customers name.
 ```
-curl --location --request POST 'https://clw5k0brs2.execute-api.us-east-1.amazonaws.com/dev/discount' \
+curl --location --request POST 'https://xkwt2jtj8i.execute-api.us-east-1.amazonaws.com/dev/discount' \
 --header 'Content-Type: application/json' \
 --data-raw '{
     "companyName": "Coles",
@@ -102,7 +102,7 @@ curl --location --request POST 'https://clw5k0brs2.execute-api.us-east-1.amazona
 - For when you want to create a new Discount for a customer where they buy a certain amount of the ads and you charge them for a smaller quantity.
 - The Discount is specific to the customer name so when you want to calculate the price of an Ad to a customer then the discount will be applied based on the customers name.
 ```
-curl --location --request POST 'https://clw5k0brs2.execute-api.us-east-1.amazonaws.com/dev/discount' \
+curl --location --request POST 'https://xkwt2jtj8i.execute-api.us-east-1.amazonaws.com/dev/discount' \
 --header 'Content-Type: application/json' \
 --data-raw '{
     "companyName": "Coles",
@@ -117,7 +117,7 @@ curl --location --request POST 'https://clw5k0brs2.execute-api.us-east-1.amazona
 - You provide the name of the company, the type of ad they want to buy, and the amount they want to buy.
 - If a discount exists for that customer then this will automatically be calculated by the API.
 ```
-curl --location --request POST 'https://clw5k0brs2.execute-api.us-east-1.amazonaws.com/dev/sale' \
+curl --location --request POST 'https://xkwt2jtj8i.execute-api.us-east-1.amazonaws.com/dev/sale' \
 --header 'Content-Type: application/json' \
 --data-raw '{
   "companyName": "Coles",
