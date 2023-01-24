@@ -1,6 +1,7 @@
 const { createAd, getAd } = require('./ad');
 const { checkAdObject: mockCheckAdObject } = require('../common/utils');
 const DynamoDB = require('../common/Dynamo')
+const { MethodIncorrectError, BadRequestError, PageNotFoundError, InternalServerError } = require('../common/errors')
 
 jest.mock('../common/utils')
 jest.mock('../common/Dynamo')
@@ -43,29 +44,15 @@ describe('createAd', () => {
       jest.resetAllMocks()
     })
     test('checkAdObject returning a false returns a 400 Bad Request', async () => {
-      const expectedResponse = {
-        statusCode: 400,
-        statusType: 'Bad Request',
-        body: JSON.stringify({ message: 'Ad properties were incorrect. Cannot create new ad.' })        
-      }      
       mockCheckAdObject.mockReturnValue(false)
-      const response = await createAd(event)
-      expect(response).toMatchObject(expectedResponse)
-
+      await expect(createAd(event)).rejects.toThrow(new BadRequestError("Ad properties were incorrect. Cannot create new ad."))
     })
     test('incorrect HTTP Method returns a 405 Method Not Allowed', async () => {
       const eventNotPostMethod = {
         ...event,
         httpMethod: 'GET'
       }
-      const expectedResponse = {
-        statusCode: 405,
-        statusType: 'Method Not Allowed',
-        body: JSON.stringify({ message: 'Must use POST Method to add an add.' })
-      }
-      const response = await createAd(eventNotPostMethod)
-      expect(response).toMatchObject(expectedResponse)
-
+      await expect(createAd(eventNotPostMethod)).rejects.toThrow(new MethodIncorrectError("Must use POST Method to add an add."))
     })
     test('put action in the Dynamo adTable causing an error then 500 Internal Server Error is returned', async () => {
       expect(DynamoDB).not.toHaveBeenCalled()
@@ -75,14 +62,8 @@ describe('createAd', () => {
       dynamodb.insertItem.mockImplementation(() => {
         throw new Error()
       })
-      const expectedResponse = {
-        statusCode: 500,
-        statusType: 'Internal Server Error',
-        body: JSON.stringify({ message: 'Error inserting item into Dynamo Table' })        
-      }
       expect(DynamoDB).toHaveBeenCalledTimes(1)
-      const response = await createAd(event)
-      expect(response).toMatchObject(expectedResponse)
+      await expect(createAd(event)).rejects.toThrow(new InternalServerError("Error inserting item into Dynamo Table"))
 
     })
   })
@@ -126,28 +107,16 @@ describe('getAd', () => {
         ...event,
         httpMethod: 'POST'
       }
-      const expectedResponse = {
-        statusCode: 405,
-        statusType: 'Method Not Allowed',
-        body: JSON.stringify({ message: 'Must use GET Method to get an add.' })        
-      }     
-      const response = await getAd(eventNotGetMethod)
-      expect(response).toMatchObject(expectedResponse)
+      await expect(getAd(eventNotGetMethod)).rejects.toThrow(new MethodIncorrectError("Must use GET Method to get an add."))
     })
     test('no id returns a 400 Bad Request.', async () => {
       const eventNoId = {
         ...event,
         pathParameters: null
       }
-      const expectedResponse = {
-        statusCode: 400,
-        statusType: 'Bad Request',
-        body: JSON.stringify({ message: 'Missing the id from the path.' })        
-      }     
-      const response = await getAd(eventNoId)
-      expect(response).toMatchObject(expectedResponse)
+      await expect(getAd(eventNoId)).rejects.toThrow(new BadRequestError("Missing the id from the path."))
     })    
-    test('get action in the Dynamo adTable causing an error then 500 Internal Server Error is returned', async () => {
+    test('get action in the Dynamo adTable causing an error then 500 Internal Server Error is returned', async () => {  
       expect(DynamoDB).not.toHaveBeenCalled()
       const dynamodb = new DynamoDB(tableName)
       mockCheckAdObject.mockReturnValue(true)
@@ -155,16 +124,8 @@ describe('getAd', () => {
       dynamodb.getItem.mockImplementation(() => {
         throw new Error()
       })
-      const expectedResponse = {
-        statusCode: 500,
-        statusType: 'Internal Server Error',
-        body: JSON.stringify({ message: 'Error getting ad from Dynamo Table.' })        
-      }
       expect(DynamoDB).toHaveBeenCalledTimes(1)
-      console.log(`event jason: ${JSON.stringify(event, null, 2)}`)
-      const response = await getAd(event)
-      expect(response).toMatchObject(expectedResponse)
-
+      await expect(getAd(event)).rejects.toThrow(new PageNotFoundError("Error getting ad from Dynamo Table."))
     })
   })
 })
