@@ -49,6 +49,38 @@ const checkSaleObject = sale => {
   return result
 }
 
+const getDiscountIdIfAdTypeExists = ({ Items }, discount) => {
+  let discountId = ''
+  Items.forEach(item => {
+    if (item.adType === discount.adType) {
+      discountId = item.id
+    }
+  })
+  return discountId
+}
+
+const computeSale = (sale, ads, discounts = null) => {
+  let price
+  if (!discounts) {
+    ads.Items.forEach(ad => {
+      if (sale.adType === ad.name) {
+        price =  sale.qty * ad.price
+      }
+    })    
+  } else {
+    discounts.Items.forEach(discount => {
+      if (discount.adType === sale.adType) {
+        discounts.Items.forEach(discount => {
+          if (discount.adType === sale.adType) {
+            price = discount.discountType === "Reduced Price" ? sale.qty * discount.newPrice : (Math.floor(qty / qtyBought) * qtyCharged) + (qty % qtyBought)
+          }
+        })
+      }
+    })
+  }
+  return price
+}
+
 const createResponse = (statusCode, body) => {
   return {
     statusCode,
@@ -60,4 +92,4 @@ const createResponse = (statusCode, body) => {
   }  
 }
 
-module.exports = { checkAdObject, checkDiscountObject, checkSaleObject, createResponse }
+module.exports = { checkAdObject, checkDiscountObject, checkSaleObject, createResponse, getDiscountIdIfAdTypeExists, computeSale }

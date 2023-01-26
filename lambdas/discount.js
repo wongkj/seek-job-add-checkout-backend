@@ -1,22 +1,8 @@
-const { checkDiscountObject, createResponse } = require('../common/utils');
+const { checkDiscountObject, createResponse, getDiscountIdIfAdTypeExists } = require('../common/utils');
 const DynamoDB = require('../common/Dynamo');
 const { MethodIncorrectError, BadRequestError, PageNotFoundError, InternalServerError } = require('../common/errors')
 
 const discountTable = process.env.DISCOUNT_TABLE
-
-const getDiscountIdIfAdTypeExists = ({ Items }, discount) => {
-  let discountId = ''
-  Items.forEach(item => {
-    if (item.adType === discount.adType) {
-      discountId = item.id
-    }
-  })
-  return discountId
-}
-
-module.exports.test = async (event, context, callback) => {
-
-}
 
 module.exports.createDiscount = async (event, context, callback) => {
   if (event.httpMethod !== 'POST') {
