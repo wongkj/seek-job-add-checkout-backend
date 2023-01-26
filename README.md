@@ -23,6 +23,13 @@ I used the following npm packages in the app.
 
 No setup is required as the API is already running in AWS.
 
+### Running Unit Tests
+
+1. Clone the repository locally.
+2. Install the dependencies by executing `npm install`.
+3. Execute `npm run test` to run all the unit tests.
+
+
 ### Using the Endpoint
 
 The API URL is `https://xkwt2jtj8i.execute-api.us-east-1.amazonaws.com/dev/`
