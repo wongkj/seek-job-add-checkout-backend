@@ -1,4 +1,4 @@
-const { checkAdObject, checkDiscountObject, checkSaleObject } = require('./utils')
+const { checkAdObject, checkDiscountObject, checkSaleObject, getDiscountIdIfAdTypeExists, computeSale } = require('./utils')
 
 describe('checkAdObject', () => {
   const ad = {
@@ -95,5 +95,48 @@ describe('checkSaleObject', () => {
     }
     const result = checkSaleObject(incorrectSale)
     expect(result).toBeFalsy()
+  })
+})
+
+describe('getDiscountIdIfAdTypeExists', () => {
+
+  const doesItemExist = {
+    Items: [
+      {
+        companyName: "Coles",
+        discountType: "Reduced Price",
+        adType: "Classic Ad",
+        qtyBought: 4,
+        qtyCharged: 2,
+        id: '1111111111'
+    }
+    ],
+    Count: 1
+  }
+
+  const discountObj = {
+    companyName: "Coles",
+    discountType: "Reduced Price",
+    adType: "Classic Ad",
+    qtyBought: 5,
+    qtyCharged: 3
+  }
+
+  describe('success', () => {
+    test('the discount id is returned when there item does exist', () => {
+      const result = getDiscountIdIfAdTypeExists(doesItemExist, discountObj)
+      expect(result).toBe('1111111111')
+    })
+  })
+
+  describe('failure', () => {
+    const discountPremiumAd = {
+      ...discountObj,
+      adType: "Premium Ad"
+    }
+    test('the discount id is not returned when the item does not exist', () => {
+      const result = getDiscountIdIfAdTypeExists(doesItemExist, discountPremiumAd)
+      expect(result).toBe("")
+    })
   })
 })

@@ -33,12 +33,11 @@ class DynamoDB {
 
     if (!data || !data.Item) throw new Error(`There was an error fetching the data for ID of ${id} from ${TableName}`);
 
-    console.log(data);
     return data.Item;
   }
 
   async insertItem(data) {
-    console.log(`insertItem was called`)
+
     const id = uuid4()
 
     const newItem = {
@@ -58,7 +57,7 @@ class DynamoDB {
   }
 
   async scanDiscounts(obj) {
-    console.log(`obj: ${JSON.stringify(obj, null, 2)}`)
+
     const { companyName } = obj;
     const params = {
       FilterExpression: "#companyName = :companyName",
@@ -73,12 +72,12 @@ class DynamoDB {
 
     const res = await this.#documentClient.scan(params).promise();
     if (!res) throw new Error(`There was an error scanning for items in the table ${this.#tableName}`)
-    console.log(`res: ${JSON.stringify(res, null, 2)}`)
+
     return res    
   }
 
   async scanAds(obj) {
-    console.log(`obj: ${JSON.stringify(obj, null, 2)}`)
+
     const { adType: name } = obj;
     const params = {
       FilterExpression: "#name = :name",
@@ -93,7 +92,7 @@ class DynamoDB {
 
     const res = await this.#documentClient.scan(params).promise();
     if (!res) throw new Error(`There was an error scanning for items in the table ${this.#tableName}`)
-    console.log(`res: ${JSON.stringify(res, null, 2)}`)
+
     return res    
   }
 
@@ -134,8 +133,7 @@ class DynamoDB {
   }
 
   async updateItems(discountId, item) {
-    console.log(`updateItems was called`)
-    console.log(`discountId: ${discountId}, item: ${JSON.stringify(item, null, 2)}`)
+
     const params = {
       Key: {
         id: discountId

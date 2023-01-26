@@ -15,8 +15,6 @@ module.exports.createAd = async (event, context, callback) => {
   const dynamo = new DynamoDB(adTable)
   const res = await dynamo.insertItem(ad)
 
-  console.log(`createAd res: ${JSON.stringify(res, null, 2)}`)
-
   if (!res) throw new InternalServerError('Error inserting item into Dynamo Table')
 
   callback(null, createResponse(200, { message: 'Successfully inserted new Ad into the Ad Table.' }))
@@ -30,10 +28,9 @@ module.exports.getAd = async (event, context, callback) => {
   
   const { id } = event.pathParameters
   const dynamo = new DynamoDB(adTable)
-  console.log(`dynamo jason: ${JSON.stringify(dynamo, null, 2)}`)
-  console.log(`typeof dynamo: ${typeof dynamo}`)
+
   const ad = await dynamo.getItem(id)
-  console.log(`getAd ad: ${JSON.stringify(ad, null, 2)}`)
+
   if (!ad) throw new PageNotFoundError('Error getting ad from Dynamo Table.')
   callback(null, createResponse(200, { ad }))
 
